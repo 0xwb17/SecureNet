@@ -8,7 +8,7 @@ It is built to separate the application logic from the network edge, ensuring th
 
 ## 🛡️ Core Features
 
-*   **Authentication:** PBKDF2-SHA256 password hashing with 1M iterations (Crackstation-resistant).
+*   **Authentication:** PBKDF2-SHA256 password hashing with 1M iterations.
 *   **Authorization:** Strict Role-Based Access Control (RBAC) for users and administrators.
 *   **Accounting:** Forensic logging of IP addresses, session durations, and bandwidth usage.
 *   **Security Hardening:** Immune to SQL Injection (Parameterized Queries), XSS (Output Escaping), and Brute-Force attacks (IP Rate Limiting).
