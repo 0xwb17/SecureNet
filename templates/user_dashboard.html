@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureNet - Connected</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0c12; --bg-card: #14161f; --border: rgba(255, 255, 255, 0.06);
+            --text-primary: #e8eaf0; --text-secondary: #8b8fa3; --text-muted: #555970;
+            --accent: #6c5ce7; --success: #2ecc71; --danger: #e74c5e;
+            --radius-md: 10px; --radius-lg: 14px;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif; background-color: var(--bg-primary);
+            color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+        .bg-grid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 40px 20px; width: 100%; }
+        
+        .header { text-align: center; margin-bottom: 40px; animation: fadeIn 0.5s ease-out; }
+        .success-icon { width: 60px; height: 60px; background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--success); }
+        .success-icon .material-icons-round { font-size: 30px; }
+        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; }
+        .username { color: var(--accent); font-weight: 600; }
+
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+        @media (max-width: 600px) { .cards-grid { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            padding: 24px; text-decoration: none; color: inherit; transition: all 0.25s ease; animation: fadeInUp 0.4s ease-out both;
+        }
+        .card:hover { border-color: rgba(108, 92, 231, 0.3); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+        .cards-grid .card:nth-child(1) { animation-delay: 0.1s; }
+        .cards-grid .card:nth-child(2) { animation-delay: 0.2s; }
+
+        .card-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .card-icon.icon-purple { background: rgba(108, 92, 231, 0.1); color: var(--accent); }
+        .card-icon.icon-orange { background: rgba(240, 160, 48, 0.1); color: #f0a030; }
+        .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+        .card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+        .footer { text-align: center; margin-top: auto; padding-top: 40px; border-top: 1px solid var(--border); }
+        .btn-logout { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; background: rgba(231, 76, 94, 0.08); color: var(--danger); border: 1px solid rgba(231, 76, 94, 0.2); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.88rem; transition: all 0.2s ease; }
+        .btn-logout:hover { background: var(--danger); color: #fff; }
+        .btn-logout .material-icons-round { font-size: 18px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">
+                <span class="material-icons-round">check_circle</span>
+            </div>
+            <h1>Welcome, <span class="username">{{ username }}</span></h1>
+            <p class="subtitle">Your device is securely connected to the network.</p>
+        </div>
+
+        <div class="cards-grid">
+            <a href="/library" class="card">
+                <div class="card-icon icon-purple">
+                    <span class="material-icons-round">local_library</span>
+                </div>
+                <div class="card-title">Library Catalog</div>
+                <div class="card-desc">Access the local database to search for books and available resources.</div>
+            </a>
+
+            <a href="/cafeteria" class="card">
+                <div class="card-icon icon-orange">
+                    <span class="material-icons-round">coffee</span>
+                </div>
+                <div class="card-title">Cafeteria Menu</div>
+                <div class="card-desc">View today's specials, opening hours, and place an order.</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <a href="/logout" class="btn-logout">
+                <span class="material-icons-round">power_settings_new</span>
+                Disconnect
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

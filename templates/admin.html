@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="12"> <!-- AUTO REFRESH EVERY 12 SECONDS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SecureNet</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════════════
+           CSS RESET & VARIABLES
+        ═══════════════════════════════════════════════════ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0c0e14;
+            --bg-secondary: #12141c;
+            --bg-card: #181b25;
+            --bg-card-hover: #1e2130;
+            --bg-input: #13151e;
+            --bg-sidebar: #0f1119;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-focus: #6c5ce7;
+            --text-primary: #e8eaf0;
+            --text-secondary: #8b8fa3;
+            --text-muted: #555970;
+            --accent: #6c5ce7;
+            --accent-hover: #7c6ef0;
+            --accent-glow: rgba(108, 92, 231, 0.15);
+            --accent-subtle: rgba(108, 92, 231, 0.08);
+            --danger: #e74c5e;
+            --danger-hover: #f05d6e;
+            --danger-glow: rgba(231, 76, 94, 0.15);
+            --success: #2ecc71;
+            --success-bg: rgba(46, 204, 113, 0.08);
+            --success-border: rgba(46, 204, 113, 0.2);
+            --warning: #f0a030;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.25);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.35);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 260px;
+            --header-height: 64px;
+        }
+
+        html {
+            font-size: 15px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           LAYOUT
+        ═══════════════════════════════════════════════════ */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SIDEBAR
+        ═══════════════════════════════════════════════════ */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .sidebar-brand {
+            padding: 24px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-brand .brand-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-brand .brand-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-section-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 16px 12px 8px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent-subtle);
+            color: var(--accent);
+        }
+
+        .nav-item .material-icons-round {
+            font-size: 20px;
+            opacity: 0.7;
+        }
+
+        .nav-item.active .material-icons-round {
+            opacity: 1;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .sidebar-user .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user .user-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-user .user-role {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-user .logout-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .sidebar-user .logout-link:hover {
+            background: var(--danger-glow);
+            color: var(--danger);
+        }
+
+        .sidebar-user .logout-link .material-icons-round {
+            font-size: 18px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           MAIN CONTENT
+        ═══════════════════════════════════════════════════ */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(12, 14, 20, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topbar-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(46, 204, 113, 0.08);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .topbar-chip .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .page-content {
+            padding: 28px 32px 48px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           PANELS / CARDS
+        ═══════════════════════════════════════════════════ */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .panel:hover {
+            border-color: rgba(255, 255, 255, 0.09);
+        }
+
+        .panel.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .panel-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .panel-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header .panel-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .panel-icon.icon-purple {
+            background: var(--accent-subtle);
+            color: var(--accent);
+        }
+
+        .panel-icon.icon-blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+        }
+
+        .panel-icon.icon-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .panel-icon .material-icons-round {
+            font-size: 18px;
+        }
+
+        .panel-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .panel-subtitle {
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .panel-body {
+            padding: 20px 24px 24px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           FORMS
+        ═══════════════════════════════════════════════════ */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.01em;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            transition: var(--transition);
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-input:hover,
+        .form-select:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: 'expand_more';
+            font-family: 'Material Icons Round';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .form-select {
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           BUTTONS
+        ═══════════════════════════════════════════════════ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+            text-decoration: none;
+            letter-spacing: 0.01em;
+        }
+
+        .btn .material-icons-round {
+            font-size: 18px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 16px rgba(108, 92, 231, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 94, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 94, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 4px 16px var(--danger-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger:active {
+            transform: translateY(0);
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           ALERTS / MESSAGES
+        ═══════════════════════════════════════════════════ */
+        .msg {
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .msg .material-icons-round {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .error {
+            background: var(--danger-glow);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 94, 0.2);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           TABLES
+        ═══════════════════════════════════════════════════ */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 0 -24px;
+            padding: 0 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        thead th {
+            padding: 11px 14px;
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            background: transparent;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr.active-row {
+            background: var(--success-bg);
+        }
+
+        tbody tr.active-row:hover {
+            background: rgba(46, 204, 113, 0.12);
+        }
+
+        .hash-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            max-width: 180px;
+            word-wrap: break-word;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-cell .cell-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .user-cell .cell-name {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           STATUS BADGES
+        ═══════════════════════════════════════════════════ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .badge-success .dot {
+            background: var(--success);
+        }
+
+        .badge-ended {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .badge-ended .dot {
+            background: var(--text-muted);
+        }
+
+        .badge-protected {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            font-style: italic;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: rgba(108, 92, 231, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(108, 92, 231, 0.2);
+        }
+
+        .role-user {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+
+        .id-cell {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           DATA CELLS
+        ═══════════════════════════════════════════════════ */
+        .data-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .data-unit {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-left: 2px;
+            font-weight: 400;
+        }
+
+        .online-text {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .online-text .dot {
+            width: 7px;
+            height: 7px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .material-icons-round {
+            font-size: 40px;
+            margin-bottom: 10px;
+            opacity: 0.4;
+        }
+
+        .empty-state p {
+            font-size: 0.88rem;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           INLINE FORM (delete button)
+        ═══════════════════════════════════════════════════ */
+        .inline-form {
+            margin: 0;
+            display: inline-block;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           ANIMATIONS
+        ═══════════════════════════════════════════════════ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel {
+            animation: fadeInUp 0.35s ease-out both;
+        }
+
+        .panels-grid .panel:nth-child(1) { animation-delay: 0.05s; }
+        .panels-grid .panel:nth-child(2) { animation-delay: 0.1s; }
+        .panels-grid .panel:nth-child(3) { animation-delay: 0.15s; }
+
+        /* ═══════════════════════════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .panels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-content {
+                padding: 20px 16px 40px;
+            }
+            .topbar {
+                padding: 0 16px;
+            }
+            .panel-body {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout">
+
+        <!-- ═════════════ SIDEBAR ═════════════ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <span class="material-icons-round">shield</span>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">SecureNet</span>
+                    <span class="brand-sub">Admin Panel</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Management</div>
+                <a class="nav-item active" href="#">
+                    <span class="material-icons-round">dashboard</span>
+                    Dashboard
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="material-icons-round">people</span>
+                    Users
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="material-icons-round">lan</span>
+                    Connections
+                </a>
+
+                <div class="sidebar-section-label">System</div>
+                <a class="nav-item" href="#">
+                    <span class="material-icons-round">settings</span>
+                    Settings
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="material-icons-round">info</span>
+                    Server Info
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar">{{ session.username[0]|upper }}</div>
+                    <div class="user-info">
+                        <div class="user-name">{{ session.username }}</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                    <a href="/logout" class="logout-link" title="Logout">
+                        <span class="material-icons-round">logout</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ═════════════ MAIN CONTENT ═════════════ -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-title">Dashboard</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="topbar-chip">
+                        <span class="pulse-dot"></span>
+                        Live  &middot; 7s refresh
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+
+                <div class="panels-grid">
+
+                    <!-- ═══════ ADD USER PANEL ═══════ -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-header-left">
+                                <div class="panel-icon icon-purple">
+                                    <span class="material-icons-round">person_add</span>
+                                </div>
+                                <div>
+                                    <div class="panel-title">Add New User</div>
+                                    <div class="panel-subtitle">Create a new account</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            {% if msg %}
+                                <div class="msg {{ msg_type }}">
+                                    <span class="material-icons-round">{% if msg_type == 'success' %}check_circle{% else %}error{% endif %}</span>
+                                    {{ msg }}
+                                </div>
+                            {% endif %}
+
+                            <form action="/admin/add_user" method="POST">
+                                <div class="form-group">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" name="username" class="form-input" placeholder="Enter username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" name="password" class="form-input" placeholder="Enter password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role</label>
+                                    <div class="select-wrapper">
+                                        <select name="role" class="form-select">
+                                            <option value="user">User</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <span class="material-icons-round">person_add</span>
+                                    Create User
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ═══════ USERS LIST PANEL ═══════ -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-header-left">
+                                <div class="panel-icon icon-blue">
+                                    <span class="material-icons-round">group</span>
+                                </div>
+                                <div>
+                                    <div class="panel-title">Registered Users</div>
+                                    <div class="panel-subtitle">{{ users|length }} total accounts</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>User</th>
+                                            <th>Role</th>
+                                            <th>Hash</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <td class="id-cell">#{{ user.id }}</td>
+                                            <td>
+                                                <div class="user-cell">
+                                                    <div class="cell-avatar">{{ user.username[0]|upper }}</div>
+                                                    <span class="cell-name">{{ user.username }}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="role-badge {% if user.role == 'admin' %}role-admin{% else %}role-user{% endif %}">
+                                                    {{ user.role }}
+                                                </span>
+                                            </td>
+                                            <td><span class="hash-text">{{ user.password_hash[:30] }}...</span></td>
+                                            <td>
+                                                {% if user.username != 'admin' %}
+                                                    <form action="/admin/delete_user/{{ user.id }}" method="POST" class="inline-form">
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete {{ user.username }}?');">
+                                                            <span class="material-icons-round">delete_outline</span>
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <span class="badge badge-protected">
+                                                        <span class="material-icons-round" style="font-size:13px;">lock</span>
+                                                        Protected
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══════ CONNECTION LOGS PANEL ═══════ -->
+                    <div class="panel full-width">
+                        <div class="panel-header">
+                            <div class="panel-header-left">
+                                <div class="panel-icon icon-green">
+                                    <span class="material-icons-round">lan</span>
+                                </div>
+                                <div>
+                                    <div class="panel-title">Connection Logs &amp; Data Usage</div>
+                                    <div class="panel-subtitle">Real-time session monitoring</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Log ID</th>
+                                            <th>Username</th>
+                                            <th>IP Address</th>
+                                            <th>Login Time</th>
+                                            <th>Logout Time</th>
+                                            <th>Downloaded</th>
+                                            <th>Uploaded</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log in logs %}
+                                        <tr class="{% if not log.logout_time %}active-row{% endif %}">
+                                            <td class="id-cell">#{{ log.id }}</td>
+                                            <td>
+                                                <div class="user-cell">
+                                                    <div class="cell-avatar" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                                                        {{ log.username[0]|upper }}
+                                                    </div>
+                                                    <span class="cell-name">{{ log.username }}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="data-value">{{ log.ip_address }}</span>
+                                            </td>
+                                            <td>{{ log.login_time }}</td>
+                                            <td>
+                                                {% if log.logout_time %}
+                                                    {{ log.logout_time }}
+                                                {% else %}
+                                                    <span class="online-text"><span class="dot"></span>ONLINE</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="data-value">{{ log.data_downloaded_mb }}</span><span class="data-unit">MB</span>
+                                            </td>
+                                            <td>
+                                                <span class="data-value">{{ log.data_uploaded_mb }}</span><span class="data-unit">MB</span>
+                                            </td>
+                                            <td>
+                                                {% if log.logout_time %}
+                                                    <span class="badge badge-ended">
+                                                        <span class="dot"></span>
+                                                        Ended
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge badge-success">
+                                                        <span class="dot"></span>
+                                                        Active Session
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="8">
+                                                <div class="empty-state">
+                                                    <span class="material-icons-round">lan</span>
+                                                    <p>No connection logs yet.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /panels-grid -->
+
+            </div><!-- /page-content -->
+
+        </main>
+
+    </div><!-- /layout -->
+
+</body>
+</html>
