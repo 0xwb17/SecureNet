@@ -23,7 +23,6 @@ MAX_ATTEMPTS = 5
 MAX_DEVICES_PER_USER = 2
 LOCKOUT_TIME = 15 * 60
 
-# Heartbeat kept ONLY for the Admin Dashboard UI to show "ONLINE"
 active_users = {} 
 HEARTBEAT_TIMEOUT = 15 
 
@@ -65,9 +64,6 @@ def admin_required(f):
 def get_db_connection():
     return pymysql.connect(**DB_CONFIG, cursorclass=pymysql.cursors.DictCursor)
 
-# ---------------------------------------------------------
-# BULLETPROOF NETWORK MONITOR: Uses ARP instead of ICMP
-# ---------------------------------------------------------
 def network_monitor():
     while True:
         time.sleep(60) 
@@ -86,16 +82,14 @@ def network_monitor():
                 if user_ip in ['127.0.0.1', '10.0.0.1']:
                     continue
                 
-                # USE ARPING INSTEAD OF PING!
-                # ARP cannot be blocked by mobile OS without breaking WiFi.
-                # -c 1 = send 1 packet. -w 2 = 2 second timeout.
+
                 result = subprocess.run(
                     ['arping', '-c', '1', '-w', '2', user_ip], 
                     stdout=subprocess.DEVNULL, 
                     stderr=subprocess.DEVNULL
                 )
                 
-                # If ARP fails, the device physically left the network
+                
                 if result.returncode != 0:
                     print(f"[NETWORK MONITOR] Device {user_ip} LEFT THE NETWORK (ARP failed). Ending Log ID {log_id}.")
                     cursor.execute(
@@ -115,7 +109,7 @@ def catch_all(path):
         if session['role'] == 'admin':
             return redirect(url_for('admin_dashboard'))
         
-        # Update heartbeat purely for the Admin UI visual indicator
+        
         active_users[get_client_ip()] = time.time()
         return render_template('user_dashboard.html', username=session['username'])
     
@@ -248,12 +242,12 @@ def admin_dashboard():
 def add_user():
     raw_user = request.form.get('username', '')
     raw_pass = request.form.get('password', '')
-    raw_role = request.form.get('role', 'user') # 1. Get the raw value
+    raw_role = request.form.get('role', 'user') 
 
     if not re.match(r"^[a-zA-Z0-9_]{3,20}$", raw_user):
         session['msg'] = "Invalid username format."
         session['msg_type'] = "error"
-    elif raw_role not in ['user', 'admin']: # 2. Check the raw value against your strict list
+    elif raw_role not in ['user', 'admin']: 
         session['msg'] = "Invalid role specified."
         session['msg_type'] = "error"                        
     elif len(raw_pass) < 6:
@@ -264,7 +258,7 @@ def add_user():
             from werkzeug.security import generate_password_hash
             hashed_pw = generate_password_hash(raw_pass, method='pbkdf2:sha256', salt_length=16)
             
-            # 3. Sanitize ONLY the username for the DB (Role doesn't need escaping because we proved it's safe above)
+            
             role = raw_role 
             safe_user = html.escape(raw_user)
             
